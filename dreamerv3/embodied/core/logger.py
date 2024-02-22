@@ -232,7 +232,7 @@ class WandBOutput:
     self._pattern = re.compile(pattern)
     import wandb
     wandb.init(
-        project="dreamerv3",
+        project="mbgcrl",
         name=logdir.name,
         # sync_tensorboard=True,,
         entity='word-bots',
