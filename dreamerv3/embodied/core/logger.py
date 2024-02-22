@@ -228,7 +228,7 @@ class TensorBoardOutput(AsyncOutput):
 
 class WandBOutput:
 
-  def __init__(self, pattern, logdir, config):
+  def __init__(self, logdir, config, pattern=r'.*'):
     self._pattern = re.compile(pattern)
     import wandb
     wandb.init(

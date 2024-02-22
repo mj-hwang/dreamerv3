@@ -1,11 +1,11 @@
 cloudpickle
 crafter
 gym==0.19.0
-jax
+# jax
 jaxlib
 numpy
 optax
 rich
 ruamel.yaml
-tensorflow-cpu
+# tensorflow-cpu
 tensorflow_probability
