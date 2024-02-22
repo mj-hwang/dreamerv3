@@ -234,8 +234,7 @@ class WandBOutput:
     wandb.init(
         project="mbgcrl",
         name=logdir.name,
-        # sync_tensorboard=True,,
-        entity='word-bots',
+        # sync_tensorboard=True,
         config=dict(config),
     )
     self._wandb = wandb
