@@ -45,7 +45,7 @@ def main():
   replay = embodied.replay.Uniform(
       config.batch_length, config.replay_size, logdir / 'replay')
   eval_replay = embodied.replay.Uniform(
-      config.batch_length, config.replay_size, logdir / 'eval_replay', is_eval=True)
+      config.batch_length, config.replay_size // 10, logdir / 'eval_replay')
   args = embodied.Config(
       **config.run, logdir=config.logdir,
       batch_steps=config.batch_size * config.batch_length)
