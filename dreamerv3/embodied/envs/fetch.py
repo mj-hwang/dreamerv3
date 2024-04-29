@@ -88,7 +88,7 @@ class FetchReach(embodied.Env):
     def step(self, action):
         if action['reset'] or self._done:
             is_first = True
-            s = self._reset()[0]
+            s = self._reset()
         else:
             is_first = False
             s = self._env.step(action)[0]
@@ -203,7 +203,7 @@ class FetchPush(embodied.Env):
     def step(self, action):
         if action['reset'] or self._done:
             is_first = True
-            s = self._reset()[0]
+            s = self._reset()
         else:
             is_first = False
             s = self._env.step(action)[0]
