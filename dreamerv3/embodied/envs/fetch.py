@@ -79,7 +79,7 @@ class FetchReach(embodied.Env):
             a = np.concatenate([np.clip(10 * delta, -1, 1), [0.0]])
             s = self._env.step(a)[0]
 
-        self._goal_img = self.render()
+        self._goal_image = self.render()
         self._env.reset()
 
         s = self._env.reset()[0]
@@ -193,7 +193,7 @@ class FetchPush(embodied.Env):
             a = np.concatenate([np.clip(10 * delta, -1, 1), [0.0]])
             s = self._env.step(a)[0]
 
-        self._goal_img = self.render()
+        self._goal_image = self.render()
         self._env.reset()
 
         s = self._env.reset()[0]
