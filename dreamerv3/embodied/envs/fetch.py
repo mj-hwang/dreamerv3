@@ -91,7 +91,7 @@ class FetchReach(embodied.Env):
             s = self._reset()
         else:
             is_first = False
-            s = self._env.step(action)[0]
+            s = self._env.step(action['action'])[0]
 
         dist = np.linalg.norm(s['achieved_goal'] - self._goal)
         self._dist.append(dist)
@@ -205,7 +205,7 @@ class FetchPush(embodied.Env):
             s = self._reset()
         else:
             is_first = False
-            s = self._env.step(action)[0]
+            s = self._env.step(action['action'])[0]
 
         dist = np.linalg.norm(s['achieved_goal'] - self._goal)
         self._dist.append(dist)
