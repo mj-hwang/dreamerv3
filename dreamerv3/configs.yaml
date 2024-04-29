@@ -113,7 +113,7 @@ minecraft:
   encoder: {mlp_keys: 'inventory|inventory_max|equipped|health|hunger|breath|reward', cnn_keys: 'image'}
   decoder: {mlp_keys: 'inventory|inventory_max|equipped|health|hunger|breath', cnn_keys: 'image'}
 
-fetch:
+fetchreach:
 
   task: fetch_reach
   envs.amount: 8
@@ -121,14 +121,13 @@ fetch:
   decoder: {mlp_keys: '$^', cnn_keys: 'image|goal_image'}
   run.train_ratio: 64
 
-fetch:
+# fetchpush:
 
-  task: fetch_
-  envs.amount: 8
-  encoder: {mlp_keys: '$^', cnn_keys: 'image|goal_image'}
-  decoder: {mlp_keys: '$^', cnn_keys: 'image|goal_image'}
-  run.train_ratio: 64
-
+#   task: fetch_push
+#   envs.amount: 8
+#   encoder: {mlp_keys: '$^', cnn_keys: 'image|goal_image'}
+#   decoder: {mlp_keys: '$^', cnn_keys: 'image|goal_image'}
+#   run.train_ratio: 64
 
 dmlab:
 

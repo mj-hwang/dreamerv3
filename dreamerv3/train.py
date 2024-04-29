@@ -170,6 +170,7 @@ def make_env(config, **overrides):
       'loconav': 'embodied.envs.loconav:LocoNav',
       'pinpad': 'embodied.envs.pinpad:PinPad',
       'fetchreach': 'embodied.envs.fetch:FetchReach',
+      # 'fetchpush': 'embodied.envs.fetch:FetchPush',
   }[suite]
   if isinstance(ctor, str):
     module, cls = ctor.split(':')
