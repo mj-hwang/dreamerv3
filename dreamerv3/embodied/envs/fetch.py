@@ -101,7 +101,6 @@ class FetchReach(embodied.Env):
 
         return self._obs(
             image,
-            self._goal_img,
             reward,
             is_first=is_first,
             is_last=self._done,
