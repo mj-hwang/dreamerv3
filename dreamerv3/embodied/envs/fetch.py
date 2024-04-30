@@ -24,9 +24,9 @@ class FetchReach(embodied.Env):
     """Wrapper for the FetchReach environment with image observations."""
 
     def __init__(self,
-                 reward_mode='positive',  # positive: 0 or 1; negative: -1 or 0
+                 sparse_reward=True,
                  keep_metrics=False):
-        self.reward_mode = reward_mode
+        self.sparse_reward = sparse_reward
         self._dist = []
         self._dist_vec = []
         self._env = reach.MujocoFetchReachEnv(render_mode='rgb_array', height=HEIGHT, width=WIDTH)
@@ -96,7 +96,13 @@ class FetchReach(embodied.Env):
         dist = np.linalg.norm(s['achieved_goal'] - self._goal)
         self._dist.append(dist)
         image = self.render()
-        reward = float(dist < 0.05)
+        
+        if self.sparse_reward:
+            reward = float(dist < 0.05)
+        else:
+            norm_dist = dist / 0.05
+            reward = np.exp(-norm_dist * np.log(2))
+
         self._done = dist < 0.05
 
         return self._obs(

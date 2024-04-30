@@ -1,4 +1,4 @@
-def main():
+def main(parsed_args):
 
   import warnings
   import dreamerv3
@@ -9,16 +9,19 @@ def main():
   config = embodied.Config(dreamerv3.configs['defaults'])
   config = config.update(dreamerv3.configs['medium'])
   config = config.update({
-      'logdir': '~/logdir/fetchreach_sparse',
+      'logdir': f'~/logdir/fetchreach_sparse_{str(parsed_args.sparse)}',
+      'run.steps': 1e8,
       'run.train_ratio': 64,
-      'run.log_every': 30,  # Seconds
+      'run.log_every': 300,  # Seconds
+      'run.eval_every': 1e4,
+      'run.eval_eps': 1,
       'batch_size': 16,
       'jax.prealloc': False,
       'encoder.mlp_keys': '$^',
       'decoder.mlp_keys': '$^',
       'encoder.cnn_keys': 'image|goal_image',
       'decoder.cnn_keys': 'image|goal_image',
-      'wrapper.length': 1000,
+      'wrapper.length': 500,
       # 'jax.platform': 'cpu',
   })
   config = embodied.Flags(config).parse()
@@ -34,11 +37,12 @@ def main():
   ])
 
   from embodied.envs.fetch import FetchReach
-  env = FetchReach()
+
+  env = FetchReach(sparse_reward=parsed_args.sparse)
   env = dreamerv3.wrap_env(env, config)
   env = embodied.BatchEnv([env], parallel=False)
 
-  eval_env = FetchReach()
+  eval_env = FetchReach(sparse_reward=True)
   eval_env = dreamerv3.wrap_env(eval_env, config)
   eval_env = embodied.BatchEnv([eval_env], parallel=False)
 
@@ -51,10 +55,14 @@ def main():
       **config.run, logdir=config.logdir,
       batch_steps=config.batch_size * config.batch_length)
 
-  # embodied.run.train(agent, env, replay, logger, args)
-  # embodied.run.eval_only(agent, env, logger, args)
+#   embodied.run.train(agent, env, replay, logger, args)
+#   embodied.run.eval_only(agent, env, logger, args)
   embodied.run.train_eval(agent, env, eval_env, replay, eval_replay, logger, args)
 
 
 if __name__ == '__main__':
-  main()
+  import argparse
+  parser = argparse.ArgumnetParser()
+  parser.add_argument('--sparse', action='store_true')
+  parsed_args = parser.parse_args()
+  main(parsed_args)
