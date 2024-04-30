@@ -324,7 +324,7 @@ class FetchSlide(embodied.Env):
         self._done = True
         self.keep_metrics = keep_metrics
 
-        self.goal = None
+        self._goal = None
         # self._viewer_setup()
 
     @property
@@ -396,12 +396,12 @@ class FetchSlide(embodied.Env):
             self._env.model, self._env.data, 'object0:joint'
         )[:3]
         self._goal = block_xyz[:2].copy()
-        old_goal = self.goal.copy()
+        old_goal = self._env.goal.copy()
         
         # now that we have the goal image, reset the environment
         s = self._env.reset()[0]
         self._move_hand_to_obj()
-        self.env.goal = old_goal
+        self._env.goal = old_goal
 
         return s
 
