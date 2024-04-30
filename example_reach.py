@@ -62,7 +62,7 @@ def main(parsed_args):
 
 if __name__ == '__main__':
   import argparse
-  parser = argparse.ArgumnetParser()
+  parser = argparse.ArgumentParser()
   parser.add_argument('--sparse', action='store_true')
   parsed_args = parser.parse_args()
   main(parsed_args)
