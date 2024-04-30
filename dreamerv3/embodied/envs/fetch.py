@@ -251,7 +251,9 @@ class FetchPush(embodied.Env):
             is_first = False
             self._env.step(action['action'])[0]
 
-        block_xyz = self.sim.data.get_joint_qpos('object0:joint')[:3]
+        block_xyz = self._env._utils.get_joint_qpos(
+            self._env.model, self._env.data, 'object0:joint'
+        )[:3]
 
         dist = np.linalg.norm(block_xyz[:2] - self._goal)
         self._dist.append(dist)
