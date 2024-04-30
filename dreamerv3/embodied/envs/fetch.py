@@ -79,8 +79,9 @@ class FetchReach(embodied.Env):
             s = self._env.step(a)[0]
 
         self._goal_image = self.render()
-        self._env.reset()
 
+        # now that we have the goal image, reset the environment
+        self._env.reset()
         s = self._env.reset()[0]
         return s
 
@@ -197,36 +198,77 @@ class FetchPush(embodied.Env):
 
         # generate the new goal image
         s = self._env.reset()[0]
-        self._goal = s['desired_goal'].copy()
-
         for _ in range(10):
             self._env.step(np.array([-1.0, 0.0, 0.0, 0.0]))
-        for _ in range(15):
-            hand = s['achieved_goal']
-            obj = s['desired_goal']
-            delta = obj - hand
-            a = np.concatenate([np.clip(10 * delta, -1, 1), [0.0]])
-            s = self._env.step(a)[0]
 
+        object_qpos = self._env._utils.get_joint_qpos(
+            self._env.model, self._env.data, 'object0:joint'
+        )
+        object_qpos[1] = 0.75
+        self._env._utils.set_joint_qpos(
+            self._env.model, self._env.data, "object0:joint", object_qpos
+        )
+        self._move_hand_to_obj()
         self._goal_image = self.render()
-        self._env.reset()
 
+        block_xyz = self._env._utils.get_joint_qpos(
+            self._env.model, self._env.data, 'object0:joint'
+        )[:3]
+        if block_xyz[2] < 0.4:
+            # block fell from the desk; failed reset 
+            # recursively reset
+            self._reset()
+
+        self._goal = s['desired_goal'].copy()
+        
+        # now that we have the goal image, reset the environment
         s = self._env.reset()[0]
+        for _ in range(10):
+            self._env.step(np.array([-1.0, 0.0, 0.0, 0.0]))
+        object_qpos = self._env._utils.get_joint_qpos(
+            self._env.model, self._env.data, 'object0:joint'
+        )
+        object_qpos[:2] = np.array([1.15, 0.75])
+        self._env._utils.set_joint_qpos(
+            self._env.model, self._env.data, "object0:joint", object_qpos
+        )
+        self._move_hand_to_obj()
+
+        block_xyz = self._env._utils.get_joint_qpos(
+            self._env.model, self._env.data, 'object0:joint'
+        )[:3]
+        if block_xyz[2] < 0.4:
+            # block fell from the desk; failed reset 
+            # recursively reset
+            self._reset()
         return s
 
     def step(self, action):
         if action['reset'] or self._done:
             is_first = True
-            s = self._reset()
+            self._reset()
         else:
             is_first = False
-            s = self._env.step(action['action'])[0]
+            self._env.step(action['action'])[0]
 
-        dist = np.linalg.norm(s['achieved_goal'] - self._goal)
+        block_xyz = self.sim.data.get_joint_qpos('object0:joint')[:3]
+
+        dist = np.linalg.norm(block_xyz[:2] - self._goal)
         self._dist.append(dist)
         image = self.render()
-        reward = float(dist < 0.05)
-        self._done = dist < 0.05
+
+        if block_xyz[2] < 0.4:
+            # block fell from the desk
+            reward = 0
+            self._done = True
+        else:
+            if self.sparse_reward:
+                reward = float(dist < 0.05)
+            else:
+                norm_dist = dist / 0.05
+                reward = np.exp(-norm_dist * np.log(2))
+
+            self._done = dist < 0.05
 
         return self._obs(
             image,
@@ -252,10 +294,10 @@ class FetchPush(embodied.Env):
 
     def _viewer_setup(self):
         self._env._viewer_setup()
-        self._env.viewer.cam.lookat[Ellipsis] = np.array([1.2, 0.8, 0.5])
-        self._env.viewer.cam.distance = 0.8
-        self._env.viewer.cam.azimuth = 180
-        self._env.viewer.cam.elevation = -30
+        self._env.viewer.cam.lookat[Ellipsis] = np.array([1.25, 0.8, 0.4])
+        self._env.viewer.cam.distance = 0.65
+        self._env.viewer.cam.azimuth = 90
+        self._env.viewer.cam.elevation = -40
 
     def close(self):
         return self._env.close()
