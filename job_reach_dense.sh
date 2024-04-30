@@ -10,5 +10,5 @@ export MUJOCO_GL='egl'
 conda activate mbgcrl
 module swap cuda/12.1
 
-cd dreamerv3
+cd ~/dreamerv3
 python example_reach.py
