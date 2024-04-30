@@ -6,9 +6,11 @@
 #SBATCH --gres=gpu:2
 #SBATCH --mail-user=mjhwang@berkeley.edu
 
-export MUJOCO_GL='egl'
+source /home/mjhwang/.bashrc
 conda activate mbgcrl
+
+export MUJOCO_GL='egl'
 module swap cuda/12.1
 
-cd ~/dreamerv3
+cd /home/mjhwang/dreamerv3
 python example_reach.py --sparse
