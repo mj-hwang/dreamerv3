@@ -13,4 +13,4 @@ export MUJOCO_GL='egl'
 module swap cuda/12.1
 
 cd /home/mjhwang/dreamerv3
-python example_reach.py --sparse
+python example_reach_sparse.py
