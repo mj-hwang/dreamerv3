@@ -9,7 +9,7 @@ def main():
   config = embodied.Config(dreamerv3.configs['defaults'])
   config = config.update(dreamerv3.configs['medium'])
   config = config.update({
-      'logdir': '~/logdir/fetchreach1',
+      'logdir': '~/logdir/fetchreach_sparse',
       'run.train_ratio': 64,
       'run.log_every': 30,  # Seconds
       'batch_size': 16,
@@ -18,6 +18,7 @@ def main():
       'decoder.mlp_keys': '$^',
       'encoder.cnn_keys': 'image|goal_image',
       'decoder.cnn_keys': 'image|goal_image',
+      'wrapper.length': 1000,
       # 'jax.platform': 'cpu',
   })
   config = embodied.Flags(config).parse()
