@@ -219,7 +219,7 @@ class FetchPush(embodied.Env):
             # recursively reset
             self._reset()
 
-        self._goal = s['desired_goal'].copy()
+        self._goal = block_xyz[:2].copy()
         
         # now that we have the goal image, reset the environment
         s = self._env.reset()[0]
