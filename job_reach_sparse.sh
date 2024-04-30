@@ -11,4 +11,4 @@ conda activate mbgcrl
 module swap cuda/12.1
 
 cd dreamerv3
-python python example_reach.py --sparse
+python example_reach.py --sparse
