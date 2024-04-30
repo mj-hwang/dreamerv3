@@ -12,7 +12,6 @@ import gym.spaces
 
 from gymnasium_robotics.envs.fetch import reach
 from gymnasium_robotics.envs.fetch import push
-from gymnasium_robotics.envs.fetch import pick_and_place
 from gymnasium_robotics.envs.fetch import slide
 
 import embodied
@@ -181,7 +180,15 @@ class FetchPush(embodied.Env):
         self._dist = []
 
     def _move_hand_to_obj(self):
-        pass
+        s = self._env._get_obs()
+        for _ in range(100):
+            hand = s['observation'][:3]
+            obj = s['achieved_goal'] + np.array([-0.02, 0.0, 0.0])
+            delta = obj - hand
+            if np.linalg.norm(delta) < 0.06:
+                break
+            a = np.concatenate([np.clip(delta, -1, 1), [0.0]])
+            s = self._env.step(a)[0]
 
     def _reset(self):
         if self._dist:  # if len(self._dist) > 0, ...
@@ -192,6 +199,8 @@ class FetchPush(embodied.Env):
         s = self._env.reset()[0]
         self._goal = s['desired_goal'].copy()
 
+        for _ in range(10):
+            self._env.step(np.array([-1.0, 0.0, 0.0, 0.0]))
         for _ in range(15):
             hand = s['achieved_goal']
             obj = s['desired_goal']

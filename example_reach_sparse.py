@@ -9,7 +9,7 @@ def main():
   config = embodied.Config(dreamerv3.configs['defaults'])
   config = config.update(dreamerv3.configs['medium'])
   config = config.update({
-      'logdir': f'~/logdir/fetchreach_dense',
+      'logdir': f'~/logdir/fetchreach_sparse',
       'run.steps': 1e8,
       'run.train_ratio': 64,
       'run.log_every': 300,  # Seconds
@@ -38,7 +38,7 @@ def main():
 
   from embodied.envs.fetch import FetchReach
 
-  env = FetchReach(sparse_reward=False)
+  env = FetchReach(sparse_reward=True)
   env = dreamerv3.wrap_env(env, config)
   env = embodied.BatchEnv([env], parallel=False)
 
